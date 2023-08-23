@@ -20,7 +20,8 @@ import { UsersModule } from './users/users.module';
       synchronize: true,
     }),
     TypeOrmModule.forFeature([User]), // Import the User entity here as well
-    AuthModule, UsersModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

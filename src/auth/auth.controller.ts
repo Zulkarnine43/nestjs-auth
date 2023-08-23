@@ -26,12 +26,12 @@ export class AuthController {
   @Post('login')
   @UseGuards(AuthGuard('local'))
   async login(@Request() req) {
+    return this.authService.signUser(req.user);
+  }
+
+  @Get('user')
+  @UseGuards(AuthGuard('jwt'))
+  async getCurrentUser(@Request() req) {
     return req.user;
-    // if (!user) {
-    //   throw new UnauthorizedException('Invalid credentials');
-    // }
-    // const payload = { username: user.username, sub: user.id };
-    // const accessToken = await this.jwtService.signAsync(payload);
-    // return { access_token: accessToken };
   }
 }

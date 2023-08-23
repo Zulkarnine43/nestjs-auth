@@ -4,12 +4,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user.entity';
 import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private readonly jwtService: JwtService,
   ) {}
 
   async register(username: string, password: string): Promise<User> {
@@ -30,5 +32,9 @@ export class AuthService {
       return user;
     }
     return null;
+  }
+
+  signUser(user: User) {
+    return this.jwtService.sign({ username: user.username });
   }
 }
