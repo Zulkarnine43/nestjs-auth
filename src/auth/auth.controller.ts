@@ -8,7 +8,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { Get, Req, UseGuards, Request } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from '@nestjs/passport';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -22,16 +24,14 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() body: { username: string; password: string }) {
-    const user = await this.authService.validateUser(
-      body.username,
-      body.password,
-    );
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-    const payload = { username: user.username, sub: user.id };
-    const accessToken = await this.jwtService.signAsync(payload);
-    return { access_token: accessToken };
+  @UseGuards(AuthGuard('local'))
+  async login(@Request() req) {
+    return req.user;
+    // if (!user) {
+    //   throw new UnauthorizedException('Invalid credentials');
+    // }
+    // const payload = { username: user.username, sub: user.id };
+    // const accessToken = await this.jwtService.signAsync(payload);
+    // return { access_token: accessToken };
   }
 }
