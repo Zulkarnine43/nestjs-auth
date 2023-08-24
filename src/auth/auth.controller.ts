@@ -1,14 +1,7 @@
 // src/auth/auth.controller.ts
-import {
-  Controller,
-  Post,
-  Body,
-  HttpCode,
-  HttpStatus,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Controller, Req, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Get, Req, UseGuards, Request } from '@nestjs/common';
+import { Get, UseGuards, Request } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 @Controller('auth')
@@ -24,14 +17,13 @@ export class AuthController {
   }
 
   @Post('login')
-  @UseGuards(AuthGuard('local'))
-  async login(@Request() req) {
-    return this.authService.signUser(req.user);
+  async login(@Body() body: { username: string; password: string }) {
+    return this.authService.login(body.username, body.password);
   }
 
   @Get('user')
   @UseGuards(AuthGuard('jwt'))
-  async getCurrentUser(@Request() req) {
+  async getCurrentUser(@Req() req: any) {
     return req.user;
   }
 }

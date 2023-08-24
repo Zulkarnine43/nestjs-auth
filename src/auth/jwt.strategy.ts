@@ -6,13 +6,13 @@ import { AuthService } from './auth.service';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
     super({
+      secretOrKey: 'topSecretKey',
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'topsecret',
     });
   }
 
-  async validate(username: string, password: string): Promise<any> {
-    const user = await this.authService.validateUser(username, password);
+  async validate(payload: object): Promise<any> {
+    const user = await this.authService.validate(payload);
     if (!user) {
       throw new UnauthorizedException();
     }
